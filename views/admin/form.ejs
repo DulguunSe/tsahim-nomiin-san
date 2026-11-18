@@ -1,0 +1,126 @@
+<%- include('../partials/header') %>
+<%
+  const categoryOptions = [...new Set([...knownCategories, ...h.SUGGESTED_CATEGORIES])];
+  const action = book.id ? `/admin/books/${book.id}` : '/admin/books';
+  const cancelHref = book.id ? `/books/${book.id}` : '/admin';
+%>
+<div class="container narrow">
+  <div class="page-head">
+    <h1><%= title %></h1>
+  </div>
+
+  <% if (errors.length) { %>
+    <div class="alert alert-error" role="alert">
+      <ul class="error-list">
+        <% for (const e of errors) { %><li><%= e %></li><% } %>
+      </ul>
+    </div>
+  <% } %>
+
+  <form class="card form" method="post" action="<%= action %>" enctype="multipart/form-data">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+    <div class="field">
+      <label for="title">Номын нэр <span class="req">*</span></label>
+      <input type="text" id="title" name="title" required maxlength="300" value="<%= book.title || '' %>">
+    </div>
+
+    <div class="grid-2">
+      <div class="field">
+        <label for="author">Зохиогч</label>
+        <input type="text" id="author" name="author" maxlength="200" value="<%= book.author || '' %>">
+      </div>
+      <div class="field">
+        <label for="category">Ангилал</label>
+        <input type="text" id="category" name="category" maxlength="100" list="category-list" value="<%= book.category || '' %>" placeholder="Жишээ нь: Уран зохиол">
+        <datalist id="category-list">
+          <% for (const c of categoryOptions) { %><option value="<%= c %>"></option><% } %>
+        </datalist>
+      </div>
+      <div class="field">
+        <label for="grade">Анги</label>
+        <select id="grade" name="grade">
+          <option value="">Бүх анги</option>
+          <% for (const g of h.GRADES) { %>
+            <option value="<%= g %>"<%= Number(book.grade) === g ? ' selected' : '' %>><%= h.gradeLabel(g) %></option>
+          <% } %>
+        </select>
+      </div>
+      <div class="field">
+        <label for="year">Хэвлэгдсэн он</label>
+        <input type="number" id="year" name="year" min="1000" max="<%= new Date().getFullYear() + 1 %>" value="<%= book.year || '' %>">
+      </div>
+      <div class="field">
+        <label for="language">Хэл</label>
+        <select id="language" name="language">
+          <% for (const lang of languages) { %>
+            <option value="<%= lang %>"<%= book.language === lang ? ' selected' : '' %>><%= lang %></option>
+          <% } %>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="description">Товч агуулга</label>
+      <textarea id="description" name="description" rows="5" maxlength="5000"><%= book.description || '' %></textarea>
+    </div>
+
+    <fieldset class="fieldset">
+      <legend>Номын файл</legend>
+      <% if (book.file_name) { %>
+        <div class="current-file">
+          Одоогийн файл: <a href="/books/<%= book.id %>/file" target="_blank" rel="noopener">PDF (<%= h.formatSize(book.file_size) %>)</a>
+          <label class="checkbox"><input type="checkbox" name="remove_pdf" value="1"> Файлыг устгах</label>
+        </div>
+      <% } %>
+      <div class="field">
+        <label for="pdf">PDF файл<%= book.file_name ? ' (солих бол шинээр сонгоно уу)' : '' %></label>
+        <input type="file" id="pdf" name="pdf" accept="application/pdf,.pdf">
+        <small class="hint">Дээд хэмжээ: <%= maxUploadMb %> МБ</small>
+      </div>
+      <div class="field">
+        <label for="external_url">Эсвэл гадны холбоос</label>
+        <input type="url" id="external_url" name="external_url" maxlength="1000" placeholder="https://…" value="<%= book.external_url || '' %>">
+        <small class="hint">PDF файл оруулахгүй бол номын онлайн хаягийг (Google Drive г.м.) бичиж болно.</small>
+      </div>
+    </fieldset>
+
+    <fieldset class="fieldset">
+      <legend>Нүүр зураг</legend>
+      <div class="cover-field">
+        <div class="cover-preview" data-cover-preview>
+          <%- include('../partials/cover', { book: { ...book, title: book.title || 'Номын нэр' } }) %>
+        </div>
+        <div class="cover-inputs">
+          <div class="field">
+            <label for="cover">Зураг сонгох (JPG, PNG, WEBP)</label>
+            <input type="file" id="cover" name="cover" accept="image/jpeg,image/png,image/webp" data-cover-input>
+            <small class="hint">Зураг оруулахгүй бол номын нэрээр өнгөт нүүр автоматаар үүснэ.</small>
+          </div>
+          <% if (book.cover_name) { %>
+            <label class="checkbox"><input type="checkbox" name="remove_cover" value="1"> Нүүр зургийг устгах</label>
+          <% } %>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary btn-lg">Хадгалах</button>
+      <a class="btn btn-ghost btn-lg" href="<%= cancelHref %>">Цуцлах</a>
+    </div>
+  </form>
+
+  <% if (book.id) { %>
+    <div class="card danger-zone">
+      <div>
+        <h2>Номыг устгах</h2>
+        <p class="muted">Ном болон түүний файлууд бүрмөсөн устна.</p>
+      </div>
+      <form method="post" action="/admin/books/<%= book.id %>/delete" data-confirm="“<%= book.title %>” номыг устгах уу? Энэ үйлдлийг буцаах боломжгүй.">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <button type="submit" class="btn btn-danger">Устгах</button>
+      </form>
+    </div>
+  <% } %>
+</div>
+<%- include('../partials/footer') %>

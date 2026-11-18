@@ -1,0 +1,11 @@
+<a class="book-card" href="/books/<%= book.id %>">
+  <div class="book-cover"><%- include('cover', { book }) %></div>
+  <div class="book-info">
+    <h3 class="book-title"><%= book.title %></h3>
+    <% if (book.author) { %><p class="book-author"><%= book.author %></p><% } %>
+    <div class="book-tags">
+      <% if (book.grade) { %><span class="tag"><%= h.gradeLabel(book.grade) %></span><% } %>
+      <% if (book.category) { %><span class="tag tag-soft"><%= book.category %></span><% } %>
+    </div>
+  </div>
+</a>

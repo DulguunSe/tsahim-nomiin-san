@@ -1,0 +1,8 @@
+<% if (book.cover_name) { %>
+  <img class="cover-img" src="/covers/<%= encodeURIComponent(book.cover_name) %>" alt="“<%= book.title %>” номын нүүр" loading="lazy">
+<% } else { %>
+  <div class="cover-placeholder <%= h.coverClass(book) %>" aria-hidden="true">
+    <span class="cover-ph-title"><%= book.title %></span>
+    <% if (book.author) { %><span class="cover-ph-author"><%= book.author %></span><% } %>
+  </div>
+<% } %>

@@ -1,0 +1,88 @@
+<%- include('../partials/header') %>
+<div class="container">
+  <% if (usingDefaultPassword) { %>
+    <div class="alert alert-warning">
+      <strong>Анхааруулга:</strong> Админы нууц үг анхдагч утгаараа байна.
+      Төслийн хавтсанд <code>.env</code> файл үүсгээд <code>ADMIN_PASSWORD=шинэ_нууц_үг</code> гэж бичээд серверээ дахин асаана уу.
+    </div>
+  <% } %>
+
+  <div class="page-head">
+    <h1>Админ самбар</h1>
+    <a class="btn btn-primary" href="/admin/books/new">+ Шинэ ном нэмэх</a>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><span class="stat-value"><%= h.formatNumber(stats.books) %></span><span class="stat-label">Нийт ном</span></div>
+    <div class="stat"><span class="stat-value"><%= h.formatNumber(stats.categories) %></span><span class="stat-label">Ангилал</span></div>
+    <div class="stat"><span class="stat-value"><%= h.formatNumber(stats.views) %></span><span class="stat-label">Нийт үзсэн</span></div>
+    <div class="stat"><span class="stat-value"><%= h.formatNumber(stats.downloads) %></span><span class="stat-label">Нийт татсан</span></div>
+  </div>
+
+  <form class="admin-search" method="get" action="/admin" role="search">
+    <input type="search" name="q" value="<%= q %>" placeholder="Номын нэр, зохиогчоор хайх…" aria-label="Ном хайх">
+    <button type="submit" class="btn btn-outline">Хайх</button>
+    <% if (q) { %><a class="clear-link" href="/admin">Цэвэрлэх</a><% } %>
+  </form>
+
+  <% if (books.length) { %>
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Ном</th>
+            <th>Ангилал</th>
+            <th>Анги</th>
+            <th>Төрөл</th>
+            <th class="num">Үзсэн</th>
+            <th class="num">Татсан</th>
+            <th>Нэмсэн</th>
+            <th><span class="visually-hidden">Үйлдэл</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for (const book of books) { %>
+            <tr>
+              <td>
+                <div class="table-book">
+                  <div class="table-thumb"><%- include('../partials/cover', { book }) %></div>
+                  <div>
+                    <a class="table-title" href="/books/<%= book.id %>"><%= book.title %></a>
+                    <% if (book.author) { %><div class="muted small"><%= book.author %></div><% } %>
+                  </div>
+                </div>
+              </td>
+              <td><%= book.category || '—' %></td>
+              <td class="nowrap"><%= book.grade ? h.gradeLabel(book.grade) : '—' %></td>
+              <td class="nowrap">
+                <% if (book.file_name) { %><span class="tag">PDF · <%= h.formatSize(book.file_size) %></span><% } %>
+                <% if (book.external_url) { %><span class="tag tag-soft">Холбоос</span><% } %>
+              </td>
+              <td class="num"><%= h.formatNumber(book.views) %></td>
+              <td class="num"><%= h.formatNumber(book.downloads) %></td>
+              <td class="nowrap muted"><%= h.formatDate(book.created_at) %></td>
+              <td class="nowrap actions-cell">
+                <a class="btn btn-ghost btn-sm" href="/admin/books/<%= book.id %>/edit">Засах</a>
+                <form method="post" action="/admin/books/<%= book.id %>/delete" class="inline-form" data-confirm="“<%= book.title %>” номыг устгах уу? Энэ үйлдлийг буцаах боломжгүй.">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                  <button type="submit" class="btn btn-danger-ghost btn-sm">Устгах</button>
+                </form>
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+    <%- include('../partials/pagination', { basePath: '/admin', params: { q } }) %>
+  <% } else { %>
+    <div class="empty">
+      <% if (q) { %>
+        <h2>“<%= q %>” хайлтаар ном олдсонгүй</h2>
+      <% } else { %>
+        <h2>Одоогоор ном алга</h2>
+        <p><a class="btn btn-primary" href="/admin/books/new">+ Эхний номоо нэмэх</a></p>
+      <% } %>
+    </div>
+  <% } %>
+</div>
+<%- include('../partials/footer') %>
