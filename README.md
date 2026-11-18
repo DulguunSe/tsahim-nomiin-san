@@ -90,7 +90,19 @@ npm run seed
 Нэг сүлжээнд (Wi-Fi) холбогдсон сурагч, багш нар **"Бусад компьютерээс"** гэсэн
 хаягаар орно. Windows-ийн Firewall зөвшөөрөл асуувал "Allow" дарна.
 
-## Интернэтэд байршуулах (Render)
+## Интернэтэд үнэгүй нээх (сургуулийн компьютер + Tailscale)
+
+Сургуулийн нэг компьютер дээр ажиллуулж, **Tailscale Funnel**-ээр
+`https://nomiin-san.….ts.net` маягийн тогтмол хаягтай интернэтэд гаргана.
+Карт, домэйн хэрэггүй, бүрэн үнэгүй.
+
+👉 Алхам алхмаар заавар: **[docs/surguuliin-kompyuter.md](docs/surguuliin-kompyuter.md)**
+
+Windows-д зориулсан бэлэн скриптүүд:
+- `scripts\windows\start.bat` — давхар дарж серверийг асаана.
+- `scripts\windows\autostart.ps1` — компьютер асахад сервер автоматаар асдаг болгоно.
+
+## Төлбөртэй хостинг (Render)
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/DulguunSe/tsahim-nomiin-san)
 
