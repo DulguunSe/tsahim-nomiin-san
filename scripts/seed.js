@@ -69,4 +69,6 @@ function main() {
   db.close();
 }
 
-main();
+if (require.main === module) main();
+
+module.exports = { SAMPLE_BOOKS, NOTE };

@@ -33,6 +33,10 @@
   box-sizing: border-box;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 html {
   -webkit-text-size-adjust: 100%;
 }
@@ -1312,5 +1316,91 @@ input[type="file"] {
 
   .stat-value {
     font-size: 1.5rem;
+  }
+}
+
+/* ---------- Статик (GitHub Pages) хувилбарын нэмэлт ---------- */
+
+button.chip,
+button.page-link {
+  font: inherit;
+  cursor: pointer;
+}
+
+.clear-link.link-button {
+  color: var(--primary);
+  text-decoration: underline;
+  padding: 0;
+  font-size: 0.9rem;
+}
+
+.head-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.narrow-wrap {
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.stat-wide {
+  grid-column: span 2;
+  justify-content: center;
+  min-width: 0;
+}
+
+.stat-link {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+  margin-top: 4px;
+}
+
+.settings-form {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+}
+
+.settings-form label {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.settings-form input {
+  flex: 1;
+  min-width: 200px;
+}
+
+.help-box {
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  margin-bottom: 18px;
+  font-size: 0.9rem;
+}
+
+.help-box summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.help-box ol {
+  margin: 10px 0 4px;
+  padding-left: 20px;
+}
+
+.help-box li {
+  margin-bottom: 6px;
+}
+
+@media (max-width: 860px) {
+  .stat-wide {
+    grid-column: span 2;
   }
 }

@@ -8,7 +8,9 @@
     "start": "node server.js",
     "dev": "node --watch server.js",
     "test": "node --test",
-    "seed": "node scripts/seed.js"
+    "seed": "node scripts/seed.js",
+    "site:build": "node scripts/build-site.js",
+    "site:preview": "node scripts/build-site.js --serve"
   },
   "engines": {
     "node": ">=22.13"
