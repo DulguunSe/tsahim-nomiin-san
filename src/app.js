@@ -57,6 +57,11 @@ function createApp(config) {
     next();
   });
 
+  // Хостинг үйлчилгээ сервер ажиллаж байгаа эсэхийг шалгах хаяг
+  app.get('/healthz', (req, res) => {
+    res.type('text/plain').send('ok');
+  });
+
   app.use('/static', express.static(path.join(ROOT, 'public'), { maxAge: '1d' }));
   app.use('/covers', express.static(paths.covers, { maxAge: '7d', index: false }));
 
@@ -67,6 +72,7 @@ function createApp(config) {
       keys: [config.sessionSecret],
       httpOnly: true,
       sameSite: 'lax',
+      secure: config.cookieSecure, // зөвхөн HTTPS-ээр илгээнэ
       maxAge: 8 * 60 * 60 * 1000, // 8 цаг
     }),
   );

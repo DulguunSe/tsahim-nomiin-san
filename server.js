@@ -14,7 +14,7 @@ const { createApp } = require('./src/app');
 const config = loadConfig();
 const app = createApp(config);
 
-app.listen(config.port, () => {
+const server = app.listen(config.port, () => {
   console.log('');
   console.log(`📚 ${config.schoolName} — цахим номын сан ажиллаж байна`);
   console.log(`   Энэ компьютер дээр:  http://localhost:${config.port}`);
@@ -36,3 +36,15 @@ app.listen(config.port, () => {
   }
   console.log('');
 });
+
+// Хостинг серверийг зогсоох/шинэчлэх үед мэдээллийн санг зөв хаана
+function shutdown(signal) {
+  console.log(`${signal} хүлээн авлаа, сервер зогсож байна…`);
+  server.close(() => {
+    app.locals.db.close();
+    process.exit(0);
+  });
+  setTimeout(() => process.exit(0), 10_000).unref();
+}
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT', () => shutdown('SIGINT'));

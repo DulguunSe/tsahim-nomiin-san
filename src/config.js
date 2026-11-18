@@ -17,7 +17,7 @@ function loadConfig(env = process.env) {
   const usingDefaultPassword = !adminPassword;
   if (usingDefaultPassword) {
     if (isProduction) {
-      throw new Error('ADMIN_PASSWORD тохируулаагүй байна. .env файлд нууц үгээ бичнэ үү.');
+      throw new Error('ADMIN_PASSWORD тохируулаагүй байна. .env файл эсвэл хостингийн Environment тохиргоонд нууц үгээ бичнэ үү.');
     }
     adminPassword = DEFAULT_ADMIN_PASSWORD;
   }
@@ -31,6 +31,7 @@ function loadConfig(env = process.env) {
     dataDir,
     maxUploadMb: parseInt(env.MAX_UPLOAD_MB, 10) || 100,
     trustProxy: Boolean(env.TRUST_PROXY),
+    cookieSecure: Boolean(env.COOKIE_SECURE),
   };
 }
 

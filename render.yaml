@@ -1,0 +1,32 @@
+# Render.com дээр байршуулах тохиргоо (Blueprint).
+# README.md-ийн "Интернэтэд байршуулах" хэсгийг үзнэ үү.
+services:
+  - type: web
+    name: tsahim-nomiin-san
+    runtime: node
+    plan: starter            # байнгын диск зөвхөн төлбөртэй багцад ажиллана
+    region: singapore        # Монголд хамгийн ойр бүс
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /healthz
+    disk:
+      name: library-data     # мэдээллийн сан, PDF, нүүр зургууд энд хадгалагдана
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "22"
+      - key: DATA_DIR
+        value: /var/data
+      - key: TRUST_PROXY
+        value: "1"
+      - key: COOKIE_SECURE
+        value: "1"
+      - key: MAX_UPLOAD_MB
+        value: "100"
+      - key: SCHOOL_NAME     # байршуулах үед асууна
+        sync: false
+      - key: ADMIN_PASSWORD  # байршуулах үед асууна
+        sync: false
